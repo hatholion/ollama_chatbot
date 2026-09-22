@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 
-# ChatRequest 모델 설계
-class ChatRequest(BaseModel):
+# ChatRequest 전송(요청) 모델 설계
+class ChatRequest(BaseModel): # BaseModel 반드시 상속
     message: str = Field(..., description="사용자가 입력한 질문")
     model: str = Field(default="exaone3.5:7.8b", description="Ollama 모델명")
     system_prompt: str = Field(
@@ -12,7 +12,7 @@ class ChatRequest(BaseModel):
     top_p: float = Field(default=0.7, ge=0.0, le=1.0)
     num_predict: int = Field(default=256, ge=1, le=2048)
 
-# ChatResponse 모델 설계
+# ChatResponse 전송(응답) 모델 설계
 class ChatResponse(BaseModel):
     model: str
     message: str

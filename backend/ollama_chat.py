@@ -30,15 +30,16 @@ def call_ollama_chat(
   # ollama 응답 시간 측정
   elapsed_time = round(time.perf_counter() - start_time, 3)
 
+  # call_ollama_chat() 함수의 return 값, 형태 : dictionary
   return {
       "model": model,
-      "message": response.message.content,
+      "message": response.message.content, # respones[message][content]도 가능
       "elapsed_time": elapsed_time,
   }
 
 
 # 로컬의 모델 목록 가져오기
-
+# Ollama 프로그램이 실행되는 순간 자동으로 열리는 주소
 OLLAMA_TAGS_URL = "http://localhost:11434/api/tags"
 def get_ollama_models():
   """Ollama API를 통해 로컬 모델 목록을 가져온다."""
@@ -49,16 +50,18 @@ def get_ollama_models():
   # 응답 실패(4xx/5xx)를 여기서 즉시 예외로 전환
   response.raise_for_status()
 
+  # OLLAMA_TAGS_URL 에는 json 형태로 모델 목록이 들어가 있다.
   data = response.json()
   # print(data)
 
+  # json 문자열을 dictionary 형태로 변경.
   models = data.get("models", [])
 
   models_list = [ model["name"] for model in models]
 
   return models_list
 
-
+# uv run ollama_cat.py 라고 쳐야지만 실행되는 부분
 if __name__ == "__main__":
   print("\n채팅 층답 테스트(결과를 기다려 주세요.) : ")
   result = call_ollama_chat(message="Local LLM이 무엇인지 초보자에게 설명해줘.")
